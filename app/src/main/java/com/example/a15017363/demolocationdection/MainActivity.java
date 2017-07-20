@@ -1,8 +1,10 @@
 package com.example.a15017363.demolocationdection;
 
+import android.Manifest;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +42,16 @@ public class MainActivity extends AppCompatActivity implements
         int permissionCheck_Fine = ContextCompat.checkSelfPermission(
                 MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION);
 
+        if (permissionCheck_Fine != PermissionChecker.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            return;
+        }
+        if (permissionCheck_Coarse != PermissionChecker.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+            return;
+        }
         if (permissionCheck_Coarse == PermissionChecker.PERMISSION_GRANTED
                 ||  permissionCheck_Fine  == PermissionChecker.PERMISSION_GRANTED){
             mLocation = LocationServices.FusedLocationApi.getLastLocation(
@@ -54,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements
                     mLocationRequest, this);
 
         } else {
+
             mLocation = null;
             Toast.makeText(MainActivity.this,
                     "Permission not granted to retrieve location info",
